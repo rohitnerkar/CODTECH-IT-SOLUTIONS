@@ -1,0 +1,151 @@
+//Task 1 - Tic-Tac-Toe Game
+
+import java.util.Random;
+import java.util.Scanner;
+
+public class TicTacToeGame
+{
+	private char[][] board;
+	private char currentPlayer;
+
+	public TicTacToeGame()
+	{
+		board = new char[3][3];
+		currentPlayer = 'X';
+
+		for(int i=0; i<3; i++)
+		{
+			for(int j=0; j<3; j++)
+			{
+				board[i][j] = '-';
+			}
+		}
+	}
+
+	public void printBoard()
+	{
+		System.out.println("-------------");
+		for(int i=0; i<3; i++)
+		{
+			System.out.print("| ");
+			for(int j=0; j<3; j++)
+			{
+				System.out.print(board[i][j] + " | ");
+			}
+			System.out.println();
+			System.out.println("-------------");
+		}
+	}
+
+	public boolean makeMove(int row, int col)
+	{
+		if(row<0 || row>=3 || col<0 || col>=3 || board[row][col] != '-')
+		{
+			System.out.println("Invalid move. Try again.");
+			return false;
+		}
+		board[row][col] = currentPlayer;
+		return true;
+	}
+
+	public boolean checkWin()
+	{
+		for(int i=0; i<3; i++)
+		{
+			if((board[i][0] == currentPlayer && board[i][1] == currentPlayer && board[i][2] == currentPlayer)
+					|| (board[0][i] == currentPlayer && board[1][i] == currentPlayer && board[2][i] == currentPlayer))
+			{
+				return true;
+			}
+		}
+
+		if((board[0][0] == currentPlayer && board[1][1] == currentPlayer && board[2][2] == currentPlayer)
+				|| (board[0][2] == currentPlayer && board[1][1] == currentPlayer && board[2][0] == currentPlayer))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	public boolean checkDraw()
+	{
+		for(int i=0; i<3; i++)
+		{
+			for(int j=0; j<3; j++)
+			{
+				if(board[i][j] == '-')
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	public void switchPlayer()
+	{
+		currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
+	}
+
+	public static void main(String[] args)
+	{
+		TicTacToeGame game = new TicTacToeGame();
+		Scanner sc = new Scanner(System.in);
+		Random random = new Random();
+
+		System.out.println("Welcome to Tic-Tac-Toe!");
+
+		System.out.print("Enter the name for Player X: ");
+		String playerXName = sc.nextLine();
+
+		while(true)
+		{
+			game.printBoard();
+
+			int row, col;
+
+			if(game.currentPlayer == 'X')
+			{
+				System.out.println(playerXName + "'s turn:");
+				System.out.print("Enter the row (0-2): ");
+				row = sc.nextInt();
+				System.out.print("Enter the column (0-2): ");
+				col = sc.nextInt();
+			} 
+			else
+			{
+				System.out.println("Player O's turn (Computer):");
+				row = random.nextInt(3);
+				col = random.nextInt(3);
+				System.out.println("Computer chooses row " + row + " and column " + col);
+			}
+
+			if(game.makeMove(row, col))
+			{
+				if(game.checkWin())
+				{
+					game.printBoard();
+					
+					if(game.currentPlayer == 'X')
+					{
+		                System.out.println(playerXName + " wins!");
+		            }
+					else
+					{
+		                System.out.println("Computer wins!");
+		            }
+					
+					break;
+				}
+
+				if(game.checkDraw())
+				{
+					game.printBoard();
+					System.out.println("It's a draw!");
+					break;
+				}
+				game.switchPlayer();
+			}
+		}
+	}
+}
