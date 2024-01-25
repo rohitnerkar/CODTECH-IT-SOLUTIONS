@@ -1,0 +1,224 @@
+//Task 3 - Student Grade Management System
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Student
+{
+    String name;
+    int rollNumber;
+    int[] subjectMarks;
+
+    public Student(String name, int rollNumber, int[] subjectMarks)
+    {
+        this.name = name;
+        this.rollNumber = rollNumber;
+        this.subjectMarks = subjectMarks;
+    }
+
+    public double calculatePercentage()
+    {
+        int totalMarks = 0;
+        for(int mark : subjectMarks)
+        {
+            totalMarks += mark;
+        }
+        return (double) totalMarks / subjectMarks.length;
+    }
+
+    public String calculateGrade()
+    {
+        double percentage = calculatePercentage();
+        if(percentage >= 90)
+        {
+            return "O";
+        }
+        else if(percentage >= 80)
+        {
+            return "A+";
+        }
+        else if(percentage >= 70)
+        {
+            return "A";
+        }
+        else if(percentage >= 60)
+        {
+            return "B+";
+        }
+        else if(percentage >= 50)
+        {
+            return "B";
+        }
+        else if(percentage >= 40)
+        {
+            return "C";
+        }
+        else if(percentage >= 35)
+        {
+            return "Pass";
+        }
+        else
+        {
+            return "F";
+        }
+    }
+}
+
+
+class GradeManagementSystem
+{
+    ArrayList<Student> studentList;
+
+    public GradeManagementSystem()
+    {
+        this.studentList = new ArrayList<>();
+    }
+
+    public void addStudent(Student student)
+    {
+        studentList.add(student);
+        System.out.println("Student record added successfully.");
+    }
+
+    public void updateStudent(int rollNumber, int[] newMarks)
+    {
+        for(Student student : studentList)
+        {
+            if(student.rollNumber == rollNumber)
+            {
+                student.subjectMarks = newMarks;
+                System.out.println("Student record updated successfully.");
+                return;
+            }
+        }
+        System.out.println("Student not found with Roll Number: " + rollNumber);
+    }
+
+    public void deleteStudent(int rollNumber)
+    {
+        for(Student student : studentList)
+        {
+            if(student.rollNumber == rollNumber)
+            {
+                studentList.remove(student);
+                System.out.println("Student record deleted successfully.");
+                return;
+            }
+        }
+        System.out.println("Student not found with Roll Number: " + rollNumber);
+    }
+
+    public void displayAllStudents()
+    {
+        if(studentList.isEmpty())
+        {
+            System.out.println("No student records available.");
+        }
+        else
+        {
+            System.out.println("Student Records:");
+            for(Student student : studentList)
+            {
+                System.out.println("Name: " + student.name +
+                        ", Roll Number: " + student.rollNumber +
+                        ", Percentage: " + student.calculatePercentage() +
+                        ", Grade: " + student.calculateGrade());
+            }
+        }
+    }
+}
+
+
+public class GradeSystem
+{
+    public static void main(String[] args)
+    {
+        GradeManagementSystem gradeManagementSystem = new GradeManagementSystem();
+        Scanner sc = new Scanner(System.in);
+
+        int choice;
+        do
+        {
+            System.out.println("\n--- Student Grade Management System ---");
+            System.out.println("1. Add Student");
+            System.out.println("2. Update Student");
+            System.out.println("3. Delete Student");
+            System.out.println("4. Display All Students");
+            System.out.println("0. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch(choice)
+            {
+                case 1:
+                    addStudent(sc, gradeManagementSystem);
+                    break;
+                    
+                case 2:
+                    updateStudent(sc, gradeManagementSystem);
+                    break;
+                    
+                case 3:
+                    deleteStudent(sc, gradeManagementSystem);
+                    break;
+                    
+                case 4:
+                    gradeManagementSystem.displayAllStudents();
+                    break;
+                    
+                case 0:
+                    System.out.println("Exit!");
+                    break;
+                    
+                default:
+                    System.out.println("Invalid choice. Please enter a valid option.");
+            }
+
+        } while(choice != 0);
+    }
+
+    private static void addStudent(Scanner sc, GradeManagementSystem gradeManagementSystem)
+    {
+        System.out.print("Enter student name: ");
+        String name = sc.next();
+        System.out.print("Enter student roll number: ");
+        int rollNumber = sc.nextInt();
+        System.out.print("Enter number of subjects: ");
+        int numSubjects = sc.nextInt();
+        
+        int[] subjectMarks = new int[numSubjects];
+        
+        for(int i=0; i<numSubjects; i++)
+        {
+            System.out.print("Enter marks for subject " + (i + 1) + ": ");
+            subjectMarks[i] = sc.nextInt();
+        }
+        
+        Student newStudent = new Student(name, rollNumber, subjectMarks);
+        gradeManagementSystem.addStudent(newStudent);
+    }
+
+    private static void updateStudent(Scanner sc, GradeManagementSystem gradeManagementSystem)
+    {
+        System.out.print("Enter student roll number to update: ");
+        int rollNumber = sc.nextInt();
+        System.out.print("Enter number of subjects: ");
+        int numSubjects = sc.nextInt();
+        
+        int[] newMarks = new int[numSubjects];
+        
+        for(int i=0; i<numSubjects; i++)
+        {
+            System.out.print("Enter new marks for subject " + (i + 1) + ": ");
+            newMarks[i] = sc.nextInt();
+        }
+        gradeManagementSystem.updateStudent(rollNumber, newMarks);
+    }
+
+    private static void deleteStudent(Scanner sc, GradeManagementSystem gradeManagementSystem)
+    {
+        System.out.print("Enter student roll number to delete: ");
+        int rollNumber = sc.nextInt();
+        gradeManagementSystem.deleteStudent(rollNumber);
+    }
+}
